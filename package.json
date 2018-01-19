@@ -1,0 +1,31 @@
+{
+  "name": "wikistack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon -e html,js,css app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakeBergs/wkikstack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jakeBergs/wkikstack/issues"
+  },
+  "homepage": "https://github.com/jakeBergs/wkikstack#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "morgan": "^1.9.0",
+    "nunjucks": "^3.0.1",
+    "pg": "^6.4.2",
+    "sequelize": "^4.31.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.11"
+  }
+}
