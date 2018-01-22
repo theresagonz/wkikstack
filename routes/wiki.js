@@ -11,26 +11,44 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    let page = Page.build({
-        title: req.body.title,
-        content: req.body.content
-    })
-    page.save().then(function(savedPage) {
-        res.redirect(savedPage.route);
-    })
+    User.findOrCreate({
+            where: {
+                name: req.body.author,
+                email: req.body.email
+            }
+        })
+        .then(function(values) {
+            let user = values[0];
+
+            let page = Page.build({
+                title: req.body.title,
+                content: req.body.content
+            })
+            return page.save().then(function(page) {
+                return page.setAuthor(user);
+            });
+        })
+        .then(function(page) {
+            res.redirect(page.route);
+        })
+        .catch(next);
 });
+
 
 router.get('/add', function(req, res, next) {
     res.render('addpage')
 });
 
 router.get('/:urlTitle', function(req, res, next) {
+
     Page.findOne({
         where: {
             urlTitle: req.params.urlTitle
         }
     }).then(function(currentPage) {
-        res.render('wikipage', { page: currentPage });
+        currentPage.getAuthor().then(function(author) {
+            res.render('wikipage', { page: currentPage, author: author });
+        })
     }).catch(next);
 })
 

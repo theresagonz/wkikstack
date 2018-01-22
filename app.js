@@ -22,11 +22,12 @@ app.use(bodyParser.json()); // would be for AJAX requests
 
 const index = require('./routes/index');
 
+app.use(express.static('public'));
 app.use('/', index);
 
 // syncing models & start the server
 
-models.db.sync({})
+models.db.sync({ force: false })
     .then(function() {
         app.listen(1337, function() {
             console.log('listening on port 1337');
