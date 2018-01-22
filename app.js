@@ -1,11 +1,12 @@
 'use strict';
-var express = require('express');
-var app = express();
-var morgan = require('morgan');
-var nunjucks = require('nunjucks');
-var fs = require('fs');
-var path = require('path');
-var bodyParser = require('body-parser');
+const express = require('express');
+const app = express();
+const morgan = require('morgan');
+const nunjucks = require('nunjucks');
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
+const models = require('./models');
 
 // templating boilerplate setup
 app.engine('html', nunjucks.render); // how to render html templates
@@ -19,20 +20,24 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true })); // for HTML form submits
 app.use(bodyParser.json()); // would be for AJAX requests
 
+const index = require('./routes/index');
 
-// start the server
-var server = app.listen(1337, function(){
-  console.log('listening on port 1337');
-});
+app.use('/', index);
 
+// syncing models & start the server
 
-
+models.db.sync({})
+    .then(function() {
+        app.listen(1337, function() {
+            console.log('listening on port 1337');
+        });
+    }).catch(console.error);
 
 
 // ERROR HANDLING
 app.use(function(err, req, res, next) {
-  res
-  .status(500)
-  .send('sorry something went really wrong but we are not sure why');
-  console.log(err);
+    res
+        .status(500)
+        .send('sorry something went really wrong but we are not sure why');
+    console.log(err);
 });
